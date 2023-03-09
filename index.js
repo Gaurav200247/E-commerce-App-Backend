@@ -2,7 +2,7 @@ require("express-async-errors");
 
 // Config
 if (process.env.NODE_ENV !== "PRODUCTION") {
-  require("dotenv").config({ path: "server/.env" });
+  require("dotenv").config({ path: ".env" });
 }
 
 const cloudinary = require("cloudinary").v2;
@@ -25,7 +25,7 @@ const PaymentRouter = require("./Routes/PaymentRouter");
 const connectDB = require("./DB/connect");
 const errHandlerMiddleware = require("./Middlewares/errHandler");
 const notFoundMiddleware = require("./Middlewares/notFound");
-const path = require("path");
+// const path = require("path");
 
 // Middlewares
 app.use(express.json());
