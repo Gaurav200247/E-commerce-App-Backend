@@ -1,5 +1,13 @@
 require("express-async-errors");
 
+// ro remove CORS error
+
+// security packages
+const cors = require("cors");
+const helmet = require("helmet");
+const rateLimiter = require("express-rate-limit");
+const xss = require("xss-clean");
+
 // Config
 if (process.env.NODE_ENV !== "PRODUCTION") {
   require("dotenv").config({ path: ".env" });
@@ -27,9 +35,23 @@ const errHandlerMiddleware = require("./Middlewares/errHandler");
 const notFoundMiddleware = require("./Middlewares/notFound");
 // const path = require("path");
 
+// setting proxy to 1
+app.set("trust proxy", 1);
+// rate limitter
+app.use(
+  rateLimiter({
+    windowMS: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  })
+);
+
+// Extra Packages for api security
+app.use(cors());
+app.use(helmet());
+app.use(xss());
+
 // Middlewares
 app.use(express.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(fileUpload());
