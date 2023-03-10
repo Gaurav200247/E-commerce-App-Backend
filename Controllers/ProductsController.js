@@ -7,7 +7,7 @@ const Product = require("../Models/Product");
 const getAllProducts = async (req, res, next) => {
   // throw new CustomAPIError("MY TEMP Error !!", 404);
 
-  const { name, category, NumericFilter = [], rating } = req.query;
+  const { name, category, rating } = req.query;
 
   // console.log(req.query);
 
@@ -29,40 +29,42 @@ const getAllProducts = async (req, res, next) => {
 
   // -------------------------------------filter-------------------------------------
 
-  if (NumericFilter) {
-    // console.log(NumericFilter);
-    const operatorMap = {
-      ">": "$gt",
-      ">=": "$gte",
-      "=": "$eq",
-      "<": "$lt",
-      "<=": "$lte",
-    };
+  // if (NumericFilter) {
+  //   console.log(NumericFilter);
+  //   const operatorMap = {
+  //     ">": "$gt",
+  //     ">=": "$gte",
+  //     "=": "$eq",
+  //     "<": "$lt",
+  //     "<=": "$lte",
+  //   };
 
-    const regEx = /\b(<|>|>=|=|<|<=)\b/g;
+  //   const regEx = /\b(<|>|>=|=|<|<=)\b/g;
 
-    let filters = NumericFilter.map((item) =>
-      item.replace(regEx, (match) => `-${operatorMap[match]}-`)
-    );
+  //   let filters = NumericFilter.map((item) =>
+  //     item.replace(regEx, (match) => `-${operatorMap[match]}-`)
+  //   );
 
-    const properties = ["price"];
+  //   console.log({ filters });
 
-    let values = [];
-    let operators = [];
+  //   const properties = ["price"];
 
-    filters.forEach((item) => {
-      const [property_name, operator, value] = item.split("-");
+  //   let values = [];
+  //   let operators = [];
 
-      if (properties.includes(property_name)) {
-        operators.push(operator);
-        values.push(value);
-      }
-    });
+  //   filters.forEach((item) => {
+  //     const [property_name, operator, value] = item.split("-");
 
-    queryObject.price = { $gte: Number(values[0]), $lte: Number(values[1]) };
-  }
+  //     if (properties.includes(property_name)) {
+  //       operators.push(operator);
+  //       values.push(value);
+  //     }
+  //   });
 
-  // console.log(queryObject);
+  //   queryObject.price = { $gte: Number(values[0]), $lte: 20000 };
+  // }
+
+  console.log(queryObject);
 
   // -------------------------------------Pagination-------------------------------------
   let result = Product.find(queryObject);
@@ -86,6 +88,9 @@ const getAllProducts = async (req, res, next) => {
     products,
     Allproducts,
   });
+
+  // const products = await Product.find({});
+  // res.status(200).json({ success: true, products });
 };
 
 // Get Single product
